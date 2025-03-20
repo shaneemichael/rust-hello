@@ -9,8 +9,9 @@
 
 [Commit 2 Reflection](#commit-2-reflection)
 
-[Commit 3 Reflection](#)
+[Commit 3 Reflection](#commit-3-reflection)
 
+[Commit 4 Reflection](#commit-4-reflection-1)
 ----
 
 ### Commit 1 Reflection
@@ -126,4 +127,44 @@ For the `handle_connection` function, there are several key changes:
     ```rust
     let mut lines = buf_reader.lines();
     ```
+
+### Commit 4 Reflection
+#### `handle_connection` function
+```rust
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&mut stream);
+    let mut lines = buf_reader.lines();
     
+    let request_line = lines.next().unwrap().unwrap();
+    
+    let _http_request: Vec<_> = lines
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+    
+    let (status_line, filename) = match &request_line[..] {
+        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", "hello.html"),
+        "GET /sleep HTTP/1.1" => {
+            thread::sleep(Duration::from_secs(10));
+            ("HTTP/1.1 200 OK", "hello.html")
+        }
+        _ => ("HTTP/1.1 404 NOT FOUND", "404.html"),
+    };
+    
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+    
+    let response = 
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+    
+    stream.write_all(response.as_bytes()).unwrap();
+}
+```
+For the `handle_connection` function, there are several key changes:
+- Replaced the simple `if-else` statement with a `match` expression that checks the request line pattern.
+- Created a new match arm specifically for handling requests to "GET /sleep HTTP/1.1" that:
+    1. Sleeps for 10 seconds using `thread::sleep(Duration::from_secs(10))`
+    2. Returns the same `hello.html` page as the root endpoint
+- Used pattern matching: `match &request_line[..]` syntax allows for more readable pattern matching against the string slice.
+
+Reading from various resources, the `sleep` feature serves several important purposes in demonstrating the limitations of a single-threaded server, such as simulating slow operations, demonstrating blocking behavior, and becoming an example of a concurrency problem. However, `sleep` is not recommended in production server, as it's deliberately included as a way to expose the limitations of the single-threaded approach.
