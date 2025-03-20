@@ -5,3 +5,10 @@ edition = "2024"
 
 [dependencies]
 threadpool = "1.8"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "hello"
+path = "src/main.rs"

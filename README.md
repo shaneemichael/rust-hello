@@ -15,6 +15,8 @@
 
 [Commit 5 Reflection](#commit-5-reflection-1)
 
+[Commit Bonus Reflection]
+
 ----
 
 ### Commit 1 Reflection
@@ -248,3 +250,12 @@ By changing from single-threading to multi-threading, there are several key conc
 - Channel communication: Using `mpsc` channels provides a clean way for the main thread to dispatch jobs to worker threads.
 - Ownership considerations: The `execute` method takes ownership of the closure and moves it to a worker thread, ensuring memory safety.
 - Graceful shutdown: Implementing `Drop` for ThreadPool allows for cleanup when the server terminates.
+
+### Commit Bonus Reflection
+Several key changes in this section include:
+- Error handling improvement: The `build` function returns a `Result` instead of panicking, which gives callers more control over error handling. This follows Rust's idiom of making errors explicit in the return type.
+- API flexibility: While `new` remains as a convenient constructor that panics on invalid input (maintaining backward compatibility), `build` provides a more flexible alternative that lets callers decide how to handle errors.
+- Future extensibility: The `build` function sets up a foundation for adding more configuration options in the future. For example, it could be extended to accept parameters for thread names, priorities, or custom thread initialization. 
+- Better testing: Functions that return `Result` are generally easier to test than those that might panic, making the code more maintainable.
+
+This pattern is common in mature Rust libraries and demonstrates a balance between convenience (the new function) and control (the build function). It follows the principle that constructors that might fail should return Result rather than panicking.
