@@ -11,9 +11,9 @@
 
 [Commit 3 Reflection](#commit-3-reflection)
 
-[Commit 4 Reflection](#commit-4-reflection-1)
+[Commit 4 Reflection](#commit-4-reflection)
 
-[Commit 5 Reflection](#commit-5-reflection-1)
+[Commit 5 Reflection](#commit-5-reflection)
 
 [Commit Bonus Reflection](#commit-bonus-reflection)
 
